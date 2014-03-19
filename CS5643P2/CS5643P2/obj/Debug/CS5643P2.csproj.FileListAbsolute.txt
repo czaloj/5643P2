@@ -1,0 +1,2 @@
+C:\Users\Cristian\AppData\Local\Temporary Projects\CS5643P2\bin\Debug\CS5643P2.exe.config
+C:\Users\Cristian\Documents\GitHub\5643P2\CS5643P2\CS5643P2\bin\Debug\CS5643P2.exe.config
