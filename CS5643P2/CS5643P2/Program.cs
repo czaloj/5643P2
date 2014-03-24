@@ -22,6 +22,8 @@ namespace CS5643P2 {
         VertexPositionTexture[] verts;
         int[] inds;
 
+        List<Constraint> constraints;
+
         BasicEffect fx;
         Texture2D t;
         float a = 0;
@@ -30,7 +32,7 @@ namespace CS5643P2 {
             base.Initialize();
         }
         protected override void LoadContent() {
-            // Read Softbody
+            // Read Soft Body
             VertexPositionNormalTexture[] vb;
             using(var s = File.OpenRead("Cloth.obj")) {
                 sbc = SoftBody.Parse(s, out vb, out inds);
@@ -40,6 +42,27 @@ namespace CS5643P2 {
                 verts[i] = new VertexPositionTexture(vb[i].Position, vb[i].TextureCoordinate);
             }
 
+            // Make Spring Constraints
+            constraints = new List<Constraint>();
+            SpringConstraint sc;
+            for(int i = 0; i < sbc.tris.Length; i++) {
+                sc = new SpringConstraint(sbc, sbc.tris[i].P1, sbc, sbc.tris[i].P2);
+                sc.K = 80; sc.Stiffness = 1f;
+                constraints.Add(sc);
+                sc = new SpringConstraint(sbc, sbc.tris[i].P1, sbc, sbc.tris[i].P3);
+                sc.K = 80; sc.Stiffness = 1f;
+                constraints.Add(sc);
+                sc = new SpringConstraint(sbc, sbc.tris[i].P2, sbc, sbc.tris[i].P3);
+                sc.K = 80; sc.Stiffness = 1f;
+                constraints.Add(sc);
+            }
+
+            Random r = new Random();
+            for(int i = 0; i < sbc.positions.Length; i++) {
+                sbc.positions[i].Y += (r.Next(0, 80) - 40) * 0.02f;
+            }
+
+            // Create Visualization Texture
             int h = 17, w = h << 1;
             t = new Texture2D(GraphicsDevice, w, h);
             Color[] c = new Color[w * h];
@@ -53,7 +76,7 @@ namespace CS5643P2 {
             }
             t.SetData(c);
 
-
+            // Cloth Shader
             fx = new BasicEffect(GraphicsDevice);
             fx.TextureEnabled = true;
             fx.VertexColorEnabled = false;
@@ -72,15 +95,12 @@ namespace CS5643P2 {
         }
 
         protected override void Update(GameTime gameTime) {
-            a += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            a += dt;
             a = MathHelper.WrapAngle(a);
 
-            for(int i = 0; i < sbc.positions.Length; i++) {
-                sbc.positions[i] = new Vector3(
-                    sbc.positions[i].X,
-                    (float)(Math.Sin(sbc.positions[i].X + a) * Math.Sin(sbc.positions[i].Z + a)),
-                    sbc.positions[i].Z
-                    );
+            for(int i = 0; i < constraints.Count; i++) {
+                constraints[i].Apply(dt);
             }
 
             base.Update(gameTime);
