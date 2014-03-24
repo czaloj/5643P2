@@ -106,13 +106,13 @@ namespace Microsoft.Xna.Framework.Graphics {
         private static readonly Regex rgxPos = new Regex(string.Join(@"\s+", @"[Vv]", rgxKeyNum, rgxKeyNum, rgxKeyNum));
         private static readonly Regex rgxUV = new Regex(string.Join(@"\s+", @"[Vv][Tt]", rgxKeyNum, rgxKeyNum));
         private static readonly Regex rgxNorm = new Regex(string.Join(@"\s+", @"[Vv][Nn]", rgxKeyNum, rgxKeyNum, rgxKeyNum));
-        private const string rgxKeyFPiece = @"([\d\\\s]+)";
+        private const string rgxKeyFPiece = @"([\d\\/\s]+)";
         private static readonly Regex rgxFTri = new Regex(string.Join(@"\s+", @"[Ff]", rgxKeyFPiece, rgxKeyFPiece, rgxKeyFPiece));
         private static readonly Regex rgxFQuad = new Regex(string.Join(@"\s+", @"[Ff]", rgxKeyFPiece, rgxKeyFPiece, rgxKeyFPiece, rgxKeyFPiece));
         private static readonly Regex rgxFPos = new Regex(@"([\d]+)");
-        private static readonly Regex rgxFPosUV = new Regex(@"([\d]+)\s*\\\s*([\d]+)");
-        private static readonly Regex rgxFPosNorm = new Regex(@"([\d]+)\s*\\\s*\\\s*([\d]+)");
-        private static readonly Regex rgxFFull = new Regex(@"([\d]+)\s*\\\s*([\d]+)\s*\\\s*([\d]+)");
+        private static readonly Regex rgxFPosUV = new Regex(@"([\d]+)\s*[\\/]\s*([\d]+)");
+        private static readonly Regex rgxFPosNorm = new Regex(@"([\d]+)\s*[\\/]\s*[\\/]\s*([\d]+)");
+        private static readonly Regex rgxFFull = new Regex(@"([\d]+)\s*[\\/]\s*([\d]+)\s*[\\/]\s*([\d]+)");
 
         public static DataFlags Parse(Stream s, out VertexPositionNormalTexture[] verts, out int[] inds, ParsingFlags ps = ParsingFlags.None) {
             // Get Data

@@ -17,7 +17,11 @@ namespace CS5643P2 {
             graphics.ApplyChanges();
         }
 
-        Cloth cloth;
+        // Soft Body And Rendering Info
+        SoftBody sbc;
+        VertexPositionTexture[] verts;
+        int[] inds;
+
         BasicEffect fx;
         Texture2D t;
         float a = 0;
@@ -26,17 +30,25 @@ namespace CS5643P2 {
             base.Initialize();
         }
         protected override void LoadContent() {
-            cloth = new Cloth(GraphicsDevice, 100, 100, Vector2.One * 0.1f);
+            // Read Softbody
+            VertexPositionNormalTexture[] vb;
+            using(var s = File.OpenRead("Cloth.obj")) {
+                sbc = SoftBody.Parse(s, out vb, out inds);
+            }
+            verts = new VertexPositionTexture[vb.Length];
+            for(int i = 0; i < verts.Length; i++) {
+                verts[i] = new VertexPositionTexture(vb[i].Position, vb[i].TextureCoordinate);
+            }
 
             int h = 17, w = h << 1;
             t = new Texture2D(GraphicsDevice, w, h);
             Color[] c = new Color[w * h];
-            int i = 0;
+            int ti = 0;
             for(int x = 0; x < h; x++) {
                 for(int y = 0; y < h; y++) {
-                    c[y * w + x] = (i % 2 == 0) ? Color.Red : Color.Orange;
-                    c[y * w + x + h] = (i % 2 == 0) ? Color.Blue : Color.Cyan;
-                    i++;
+                    c[y * w + x] = (ti % 2 == 0) ? Color.Red : Color.Orange;
+                    c[y * w + x + h] = (ti % 2 == 0) ? Color.Blue : Color.Cyan;
+                    ti++;
                 }
             }
             t.SetData(c);
@@ -63,30 +75,28 @@ namespace CS5643P2 {
             a += (float)gameTime.ElapsedGameTime.TotalSeconds;
             a = MathHelper.WrapAngle(a);
 
-            for(int z = 0; z < cloth.rows; z++) {
-                for(int x = 0; x < cloth.stride; x++) {
-                    Vector3 p = cloth[x, z];
-                    cloth[x, z] = new Vector3(
-                        p.X,
-                        (float)(Math.Sin(p.X + a) * Math.Sin(p.Z + a)),
-                        p.Z
-                        );
-                }
+            for(int i = 0; i < sbc.positions.Length; i++) {
+                sbc.positions[i] = new Vector3(
+                    sbc.positions[i].X,
+                    (float)(Math.Sin(sbc.positions[i].X + a) * Math.Sin(sbc.positions[i].Z + a)),
+                    sbc.positions[i].Z
+                    );
             }
-            cloth.UpdatePositions();
 
             base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime) {
+            for(int i = 0; i < verts.Length; i++)
+                verts[i].Position = sbc.positions[i];
+
             GraphicsDevice.Clear(Color.Transparent);
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
+            GraphicsDevice.RasterizerState = RasterizerState.CullNone;
             GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
 
-            cloth.SetBuffers(GraphicsDevice);
             fx.CurrentTechnique.Passes[0].Apply();
-            cloth.Draw(GraphicsDevice);
+            GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, verts, 0, verts.Length, inds, 0, inds.Length / 3, VertexPositionTexture.VertexDeclaration);
 
             GraphicsDevice.SetVertexBuffers(null);
             GraphicsDevice.Indices = null;

@@ -14,27 +14,33 @@ namespace CS5643P2 {
     }
 
     public class SoftBody {
-        public static SoftBody Parse(Stream s, out VertexPositionNormalTexture[] verts) {
+        public static SoftBody Parse(Stream s, out VertexPositionNormalTexture[] verts, out int[] inds) {
             SoftBody body = null;
-            int[] inds;
             DataFlags df;
             if(ObjParser.TryParse(s, out verts, out inds, out df, ParsingFlags.ConversionOpenGL)) {
-                body = new SoftBody(inds.Length / 3);
+                body = new SoftBody(inds.Length / 3, verts.Length);
                 for(int vi = 0, ti = 0; vi < inds.Length; ) {
                     body.tris[ti].P1 = inds[vi++];
                     body.tris[ti].P2 = inds[vi++];
                     body.tris[ti].P3 = inds[vi++];
                     ti++;
                 }
+                for(int i = 0; i < verts.Length; i++) {
+                    body.positions[i] = verts[i].Position;
+                }
             }
             return body;
         }
 
+
         public readonly Triangle[] tris;
+        public readonly Vector3[] positions;
+
         public readonly List<Constraint> restAngleConstraints;
 
-        public SoftBody(int c) {
-            tris = new Triangle[c];
+        public SoftBody(int tc, int vc) {
+            tris = new Triangle[tc];
+            positions = new Vector3[vc];
             restAngleConstraints = new List<Constraint>();
         }
 
