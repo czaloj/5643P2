@@ -1,1 +1,9 @@
 C:\Users\Cristian\AppData\Local\Temporary Projects\CS5643P2\bin\Debug\CS5643P2.exe.config
+C:\InduZtry\Git\5643P2\CS5643P2\CS5643P2\bin\Debug\CS5643P2.exe.config
+C:\InduZtry\Git\5643P2\CS5643P2\CS5643P2\bin\Debug\CS5643P2.exe
+C:\InduZtry\Git\5643P2\CS5643P2\CS5643P2\bin\Debug\CS5643P2.pdb
+C:\InduZtry\Git\5643P2\CS5643P2\CS5643P2\obj\Debug\CS5643P2.csprojResolveAssemblyReference.cache
+C:\InduZtry\Git\5643P2\CS5643P2\CS5643P2\obj\Debug\CS5643P2.Properties.Resources.resources
+C:\InduZtry\Git\5643P2\CS5643P2\CS5643P2\obj\Debug\CS5643P2.csproj.GenerateResource.Cache
+C:\InduZtry\Git\5643P2\CS5643P2\CS5643P2\obj\Debug\CS5643P2.exe
+C:\InduZtry\Git\5643P2\CS5643P2\CS5643P2\obj\Debug\CS5643P2.pdb

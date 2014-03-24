@@ -28,8 +28,7 @@ namespace CS5643P2 {
             w++; h++;
             stride = w;
             rows = h;
-
-            // Create Vertices
+                // Create Vertices
             verts = new VertexPositionNormalTexture[(w * h) << 1];
             int i = 0;
             for(int z = 0; z < h; z++) {

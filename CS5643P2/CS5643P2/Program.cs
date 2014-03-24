@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
@@ -93,7 +94,6 @@ namespace CS5643P2 {
             base.Draw(gameTime);
         }
 
-        [STAThread]
         static void Main() {
             using(Program p = new Program()) {
                 p.Run();
